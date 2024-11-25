@@ -15,16 +15,25 @@ if (!city) {
   process.exit(1);
 }
 
+// a function that gets data from https://openweathermap.org/
 async function getWeather(city) {
   try {
+    // this url will appear on https://.. so using that and add some variable to be flexible
     const url = `${BASE_URL}?q=${city}&appid=${API_KEY}&units=${unit}`;
+
+    //fetch(url).then(()=> response.json).catch(e => console.log(e))
     const res = await fetch(url);
     const weatherData = await res.json();
 
+    // checks if there are responses
     if (!res.ok) {
       console.log(chalk.red(`Error: ${weatherData.message}`));
       return;
     }
+    // get data in variables
+    // main as headparent
+    // coord as parent for lat and lon
+    // weather, name, wind
     const { main, coord, weather, name, wind } = weatherData;
     const temperature = main.temp;
     const condition = weather[0].description;
@@ -36,6 +45,8 @@ async function getWeather(city) {
     const wind_speed = wind.speed;
     const wind_deg = wind.deg;
 
+
+    // a little playing around with chalk and layout
     console.log(
       chalk.blueBright.bold(`
       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -63,4 +74,6 @@ async function getWeather(city) {
     console.log(chalk.red(`Error fetching weather data: ${error.message}`));
   }
 }
+
+//runs the program
 getWeather(city);
